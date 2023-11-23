@@ -1,0 +1,330 @@
+<Tabs>:
+    do_default_tab: False
+    tab_width: root.width / 4
+    tab_pos: 'top_mid'
+    tab_height: root.height / 20
+
+    TabbedPanelItem:
+        id: assets_tab
+        text: "Активы"
+        BoxLayout:
+            orientation: "vertical"
+            BoxLayout:
+                orientation: "horizontal"
+                Spinner:
+                    id: assets_spinner
+                    text: "Выберите актив"
+                    size: root.width / 3, 50
+                    size_hint: None, None
+                    pos_hint: {"top": 0.75}
+                    values: ["ПДН клиентов", "ПДН сотрудников", "Веб-сайт"]
+                    on_text: root.assets_spinner_clicked(assets_spinner.text)
+                Spinner:
+                    id: consequences_spinner
+                    text: "Последствия угрозы"
+                    size: root.width / 3, 50
+                    size_hint: None, None
+                    pos_hint: {"top": 0.75}
+                    values: ["Конфиденциальность", "Целостность", "Доступность"]
+                    on_text: root.consequences_spinner_clicked(consequences_spinner.text)
+                Spinner:
+                    id: damagetype_spinner
+                    text: "Тип ущерба"
+                    size: root.width / 3, 50
+                    size_hint: None, None
+                    pos_hint: {"top": 0.75}
+                    values: ["У1", "У2", "У3", "У4"]
+                    on_text: root.damagetype_spinner_clicked(damagetype_spinner.text)
+            GridLayout:
+                cols: 2
+                row: 2
+                row_force_default: True
+                row_default_height: 30
+                padding: [25, 0, 25, 100]
+                Label:
+                    text: "Ценность актива: "
+                Label:
+                    text: "Комментарий: "
+                TextInput:
+                    id: asset_value
+                    multiline: False
+                    text: ""
+                    on_text: root.on_text(asset_value.text)
+                TextInput:
+                    id: notice
+                    multiline: False
+                    text: ""
+            BoxLayout:
+                canvas.before:
+                    Color:
+                        rgba: (240/255, 240/255, 240/255, 1)
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                orientation: "horizontal"
+                Label:
+                    id: preview_label
+                    color: "black"
+                    font_size: 18
+                    text: assets_spinner.text + " | " + consequences_spinner.text + " | " + damagetype_spinner.text + " | " + asset_value.text + " | " + notice.text
+            Button:
+                id: save_asset_button
+                text: "Сохранить"
+                on_press: root.save_asset()
+                on_press: save_asset_button.text = "Сохранено"
+
+
+    TabbedPanelItem:
+        id: threats_tab
+        text: "Угрозы"
+        BoxLayout:
+            orientation: "vertical"
+            BoxLayout:
+                orientation: "horizontal"
+                Spinner:
+                    id: choose_asset_spinner
+                    text: "Актив"
+                    size: root.width / 3, 50
+                    size_hint: None, None
+                    pos_hint: {"top": 0.8}
+                    values: root.get_assets()
+                Spinner:
+                    id: choose_threat_spinner
+                    text: "Угрозы и последствия"
+                    size: root.width - root.width / 3, 50
+                    size_hint: None, None
+                    pos_hint: {"top": 0.8}
+                    values: root.threats_and_vulnerabilities
+            GridLayout:
+                cols: 2
+                row: 2
+                row_force_default: True
+                row_default_height: 30
+                #padding: [25, 0, 25, 100]
+                Label:
+                    text: "Частота угрозы: "
+                    pos_hint: {"top": 0.8}
+                Label:
+                    text: "Вероятность реализации: "
+                TextInput:
+                    id: threat_freq_value
+                    multiline: False
+                    text: "0"
+                TextInput:
+                    id: threat_probability
+                    multiline: False
+                    text: "0"
+            GridLayout:
+                cols: 2
+                row: 2
+                row_force_default: True
+                row_default_height: 30
+                #padding: [25, 0, 25, 100]
+                Label:
+                    text: "Название защиты: "
+                    pos_hint: {"top": 0.8}
+                Label:
+                    text: "Цена защиты: "
+                TextInput:
+                    id: protect_name
+                    multiline: False
+                    text: ""
+                TextInput:
+                    id: protect_price
+                    multiline: False
+                    text: "0"
+            BoxLayout:
+                canvas.before:
+                    Color:
+                        rgba: (240/255, 240/255, 240/255, 1)
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                orientation: "horizontal"
+                Label:
+                    id: preview_label
+                    color: "black"
+                    font_size: 18
+                    text: choose_asset_spinner.text + " | " + choose_threat_spinner.text + " | " + threat_freq_value.text + " | " + threat_probability.text + " | " + protect_name.text + " | " + protect_price.text
+            Button:
+                id: save_threat_button
+                text: "Сохранить"
+                on_press: root.save_threats()
+                on_press: save_threat_button.text = "Сохранено"
+
+    TabbedPanelItem:
+        id: table_tab
+        text: "Таблица"
+        GridLayout:
+            cols: 6
+            rows: 2
+            canvas.before:
+                Color:
+                    rgba: (240/255, 240/255, 240/255, 1)
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            Label:
+                color: "black"
+                font_size: 14
+                text: "Актив"
+            Label:
+                color: "black"
+                font_size: 14
+                text: "Угроза/уязвимость"
+            Label:
+                color: "black"
+                font_size: 14
+                text: "Частота угрозы"
+            Label:
+                color: "black"
+                font_size: 14
+                text: "Вероятность угрозы"
+            Label:
+                color: "black"
+                font_size: 14
+                text: "Средство защиты"
+            Label:
+                color: "black"
+                font_size: 14
+                text: "Цена"
+            Label:
+                id: assets_last
+                color: "black"
+                font_size: 12
+                text: root.get_threats()[0]
+            Label:
+                id: threats_last
+                color: "black"
+                font_size: 12
+                text: root.get_threats()[1]
+            Label:
+                id: freq_last
+                color: "black"
+                font_size: 12
+                text: root.get_threats()[2]
+            Label:
+                id: prob_last
+                color: "black"
+                font_size: 12
+                text: root.get_threats()[3]
+            Label:
+                id: protect_name_last
+                color: "black"
+                font_size: 12
+                text: root.get_threats()[4]
+            Label:
+                id: protect_price_last
+                color: "black"
+                font_size: 12
+                text: root.get_threats()[5]
+
+    TabbedPanelItem:
+        id: calculation_tab
+        text: "Расчет ALE/ROI"
+        BoxLayout:
+            orientation: "vertical"
+            Button:
+                id: ale_roi_button
+                text: "Расчитать ALE/ROI"
+                on_press: root.calculate_aleroi()
+            GridLayout:
+                cols: 5
+                rows: 2
+                canvas.before:
+                    Color:
+                        rgba: (240/255, 240/255, 240/255, 1)
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                Label:
+                    color: "black"
+                    font_size: 14
+                    text: "Актив"
+                Label:
+                    color: "black"
+                    font_size: 14
+                    text: "Угроза/уязвимость"
+                Label:
+                    color: "black"
+                    font_size: 14
+                    text: "Кол-во инцидентов/год"
+                Label:
+                    color: "black"
+                    font_size: 14
+                    text: "Вероятность угрозы"
+                Label:
+                    color: "black"
+                    font_size: 14
+                    text: "ALE"
+                Label:
+                    id: aleroi_asset1
+                    color: "black"
+                    font_size: 12
+                    text: root.get_aleroi()[0]
+                Label:
+                    id: aleroi_threat
+                    color: "black"
+                    font_size: 12
+                    text: root.get_aleroi()[1]
+                Label:
+                    id: aleroi_frequency
+                    color: "black"
+                    font_size: 12
+                    text: root.get_aleroi()[2]
+                Label:
+                    id: aleroi_probability
+                    color: "black"
+                    font_size: 12
+                    text: root.get_aleroi()[3]
+                Label:
+                    id: aleroi_ale1
+                    color: "black"
+                    font_size: 12
+                    text: root.get_aleroi()[4]
+
+            GridLayout:
+                cols: 4
+                rows: 2
+                canvas.before:
+                    Color:
+                        rgba: (240/255, 240/255, 240/255, 1)
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                Label:
+                    color: "black"
+                    font_size: 14
+                    text: "Актив"
+                Label:
+                    color: "black"
+                    font_size: 14
+                    text: "ALE"
+                Label:
+                    color: "black"
+                    font_size: 14
+                    text: "Стоимость защитных мер"
+                Label:
+                    color: "black"
+                    font_size: 14
+                    text: "ROI"
+                Label:
+                    id: aleroi_asset2
+                    color: "black"
+                    font_size: 12
+                    text: root.get_aleroi()[0]
+                Label:
+                    id: aleroi_ale2
+                    color: "black"
+                    font_size: 12
+                    text: root.get_aleroi()[4]
+                Label:
+                    id: aleroi_protect_price
+                    color: "black"
+                    font_size: 12
+                    text: root.get_aleroi()[5]
+                Label:
+                    id: aleroi_roi
+                    color: "black"
+                    font_size: 12
+                    text: root.get_aleroi()[6]
